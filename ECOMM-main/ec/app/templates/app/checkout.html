@@ -1,0 +1,93 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Checkout{% endblock title %}
+
+{% block main-content %}
+
+<!-- Display Messages -->
+{% if messages %}
+    {% for msg in messages %}
+        <div class="alert alert-danger" role="alert">
+            {{ msg }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<!-- Checkout Section -->
+<div class="row mt-5">
+    <!-- Order Summary -->
+    <div class="col-sm-6">
+        <h4>Order Summary</h4>
+        <hr>
+
+        {% if cart_items %}
+            {% for item in cart_items %}
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Product: {{ item.product.title }}</h5>
+                        <p class="mb-1">Quantity: {{ item.quantity }}</p>
+                        <p class="fw-bold mb-0">Price: Rs. {{ item.product.discounted_price }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <p class="fw-bold mt-3">Total Cost + Rs. 60 = Rs. {{ totalamount }}</p>
+        {% else %}
+            <p class="text-danger">Your cart is empty. Please add items to proceed.</p>
+        {% endif %}
+
+        <small class="text-muted">
+            <strong>Terms and Conditions:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia, ullam saepe! Iure optio repellat dolor velit, minus rem. Facilis cumque neque numquam laboriosam, accusantium adipisci nisi nihil in et quis?
+        </small>
+    </div>
+
+    <!-- Shipping Address Section -->
+    <div class="col-sm-4 offset-sm-1">
+        <h4>Select Shipping Address</h4>
+        <hr>
+
+        {% if add %}
+            <form method="post" id="checkout-form">
+                {% csrf_token %}
+                {% for ad in add %}
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ ad.name }}</h5>
+                            <p class="mb-1">Mobile: {{ ad.mobile }}</p>
+                            <p class="mb-1">{{ ad.locality }}, {{ ad.city }}, {{ ad.state }} - {{ ad.zipcode }}</p>
+                        </div>
+                        <div class="form-check ms-3 mb-2">
+                            <input class="form-check-input" type="radio" name="custid" id="address{{ forloop.counter }}" value="{{ ad.id }}">
+                            <label class="form-check-label fw-bold" for="address{{ forloop.counter }}">
+                                Address {{ forloop.counter }}
+                            </label>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <!-- Total Amount Field -->
+                <div class="mb-3">
+                    <label for="totamount" class="form-label fw-bold">Total Amount:</label>
+                    <input type="number" class="form-control" id="totamount" name="totamount" value="{{ totalamount }}" readonly>
+                </div>
+
+                <!-- Submit Button -->
+             <div class="text-end">
+             {% comment %} <button type="submit" class="btn btn-warning mt-3 px-5 fw-bold">Continue</button> {% endcomment %}
+
+             <button id="rzp-button1" type="submit" class="btn btn-warning mt-3 px-5 fw-bold">Payment</button>
+             </div>
+            </form>
+        {% else %}
+            <p class="text-danger">No shipping address available. Please add an address in your profile.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock main-content %}
+{% block payment-gateway %}
+<script>
+    // Payment gateway integration code here
+</script>
+{% endblock payment-gateway %}

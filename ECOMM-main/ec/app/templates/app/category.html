@@ -1,0 +1,46 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block title %}Category{% endblock title %}
+
+{% block main-content %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Category Section -->
+        <div class="col-sm-3">
+            <div style="border: 2px solid #ddd; padding: 20px; border-radius: 8px; background-color: #f9f9f9;">
+                {% for val in title %}
+                    <a href="{% url 'category-title' val.title %}" 
+                       class="list-group-item list-group-item-action" 
+                       style="border: none; margin: 5px 0; padding: 10px; font-weight: bold; background-color: #e0e0e0; border-radius: 5px;">
+                        {{ val.title }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Product Section -->
+        <div class="col-sm-9">
+            <div class="row">
+                {% for prod in product %}
+                    <div class="col-md-4 text-center mb-4">
+                        <a href="{% url 'product-detail' prod.id %}" class="btn">
+                            <div>
+                                <img src="{{ prod.product_image.url }}" 
+                                     width="300px" height="200px" 
+                                     style="max-width: 100%; height: auto; display: block; margin: 0 auto;" 
+                                     alt="{{ prod.title }}"/>
+                                <div style="font-weight: bold;">{{ prod.title }}</div>
+                                <div style="font-weight: bold; color: #dc3545;">
+                                    Rs. {{ prod.discounted_price }}/-
+                                    <small style="font-weight: lighter; text-decoration-line: line-through;">{{ prod.selling_price }}</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main-content %}
